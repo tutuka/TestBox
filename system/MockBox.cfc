@@ -114,8 +114,11 @@ Description		:
 			<cfargument name="callLogging" 	type="boolean" 	required="false" default="true" hint="Add method call logging for all mocked methods"/>
 			<!--- ************************************************************* --->
 			<cfscript>
-				if ( structKeyExists( arguments.object, "mockbox" ) ) {
-					return arguments.object;
+				// Note: The following takes very long for certain objects: if ( structKeyExists( arguments.object, "mockbox" ) ) {
+				for (key in arguments.object) {
+					if (key == 'mockbox') {
+						return arguments.object;
+					}
 				}
 				return createMock(object=arguments.object);
 			</cfscript>
@@ -357,13 +360,25 @@ Description		:
 				var genFile = "";
 				var oMockGenerator = this.MockBox.getmockGenerator();
 
+				var keyFound = false;
 				// Check if the method is existent in public scope
-				if ( structKeyExists(this,arguments.method) ){
-					fncMD = getMetadata(this[arguments.method]);
+				// Note: Using structKeyExists here takes a long time for certain objects:	if ( structKeyExists(this,arguments.method) ){
+				for (key in this) {
+					if (key == arguments.method) {
+						fncMD = getMetadata(this[arguments.method]);
+						keyFound = true;
+						break;	
+					}
 				}
+
 				// Else check in private scope
-				else if( structKeyExists(variables,arguments.method) ){
-					fncMD = getMetadata(variables[arguments.method]);
+				// Note: Using structKeyExists here takes a long time for certain objects: else if( structKeyExists(variables,arguments.method) ){
+				if (not keyFound) {
+					for (key in variables) {
+						if (key == arguments.method) {
+							fncMD = getMetadata(variables[arguments.method]);
+						}
+					}
 				}
 
 				// Prepare Metadata Existence, works on virtual methods also
