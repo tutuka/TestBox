@@ -42,9 +42,9 @@ Description :
 		<cfargument name="CFC" required="true" hint="The cfc to mixin">
 		<cfset var udf = 0>
 
-		<cfif NOT structKeyExistsLocal(arguments.CFC, "$mixed")>
+		<cfif NOT structKeyExists(arguments.CFC, "$mixed")>
 		<cflock name="mixerUtil.#instance.system.identityHashCode(arguments.CFC)#" type="exclusive" timeout="15" throwontimeout="true">
-			<cfif NOT structKeyExistsLocal(arguments.CFC, "$mixed")>
+			<cfif NOT structKeyExists(arguments.CFC, "$mixed")>
 			<cfscript>
 				for( udf in instance.mixins ){
 					arguments.CFC[udf] = instance.mixins[udf];
@@ -54,20 +54,6 @@ Description :
 			</cfif>
 		</cflock>
 		</cfif>
-	</cffunction>
-
-	<cffunction name="structKeyExistsLocal">
-		<cfargument name="object" required="true">
-		<cfargument name="searchKey" required="true">
-
-		<cfscript>
-			for ( key in object ) {
-				if (key == searchKey) {
-					return true;
-				}
-			}
-			return false;
-		</cfscript>
 	</cffunction>
 
 	<!--- Stop the injection, do cleanup --->
