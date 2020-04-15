@@ -618,13 +618,13 @@ Description		:
 			<cfreturn createObject("component","testbox.system.util.Util")/>
 		</cffunction>
 
-		<cffunction name="structKeyExistsWithLoop" access="public" output="false" returntype="boolean" hint="structKeyExists is very slow when objects mocked are large due to inheritance">
+		<cffunction name="structKeyExistsWithLoop" access="public" output="false" returntype="boolean" hint="structKeyExists is very slow when objects mocked are large due to inheritance and the key is not in the struct">
 			<cfargument name="object" 		type="any" required="true"  hint="The object taken as the struct for the key to be searched in"/>
 			<cfargument name="searchKey" 	type="string"  required="false" default="" hint="The key to search for" />
 			<cfscript>
 				for (key in object) {
 					if (key == searchKey) {
-						return not isNull(object[key]);
+						return structKeyExists(object, searchKey);
 					}
 				}
 				return false;
