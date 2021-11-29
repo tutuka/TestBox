@@ -9,9 +9,6 @@ cpu.json
 tests/results
 tests/results-mb
 
-# Dependencies
-system/modules/**
-
 # Build Process
 WEB-INF
 build/build.number
